@@ -1,0 +1,9 @@
+This file documents the wire struct used in the ANTHEM code.
+Fields      Unit        Description
+.Gel        [S]         electric conductances of wire segments (Nwires-by-(N1D-1))
+.Gth        [S]         thermal conductances of wire segments (Nwires-by-(N1D-1))
+.idx        []          indices of wire in 3D mesh (Nwires-by-N1D)
+.Ksigma     [S]         electrical wire stiffness matrix (np-by-np)
+.Klambda    [W/K]       thermal wire stiffness matrix (np-by-np)
+.N          []          number of wires
+.select     []          vector of wire indices that shall be included. Use 1 if a wire is included and 0 if not. (Nwire-by-1)

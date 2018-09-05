@@ -1,0 +1,14 @@
+This file documents the materials struct used in the ANTHEM code.
+Field           Unit        Description
+.Meps           [F]         electric capacitance matrix (3np-by-3np)
+.Mlambda        [W/K]       thermal conductance matrix (3np-by-3np)
+.Mrhoc          [J/K]       thermal capacitance matrix (np-by-np)
+.Msigma         [S]         electric conductance matrix (3np-by-3np)
+.nonlin         []          struct containing nonlinear information (optional, default: linear problem)
+    .alpha      [1/K]       temperature coefficient (np-by-1)
+    .Dalpha     [1/K]       temperature coefficient matrix for electric conductivity without geometrical information (3np-by-3np)
+    .Dbeta      [1/K]       temperature coefficient matrix for thermal conductivity without geometrical information (3np-by-3np)
+    .Dsigma0    [S/m]       electric reference conductance matrix without geometrical information (3np-by-3np)
+    .Msigma0    [S]         electric reference conductance matrix with geometrical information (3np-by-3np)
+    .rho0       [Ohm*m]     reference material value (np-by-1)
+    .T0         [K]         reference temperature (scalar)

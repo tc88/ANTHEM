@@ -1,0 +1,12 @@
+This file documents the idx struct used in the ANTHEM code.
+Field               Description
+.elect              struct that contains electrical indices
+    .dir            indices for electric Dirichlet nodes (union of .excitation and .gnd)
+    .dof            indices for electric degrees of freedom
+    .excitation     canonical indices of nodes at which an electric excitation is used (important for netlist extraction)
+    .gnd            canonical indices of electric ground nodes (important for netlist extraction)
+.therm              struct that contains thermal indices
+    .dir            indices for thermal Dirichlet nodes (union of .excitation and .gnd)
+    .dof            indices for thermal degrees of freedom
+    .excitation     canonical indices of nodes at which a thermal excitation is used (important for netlist extraction)
+    .gnd            canonical indices of thermal ground nodes (important for netlist extraction)

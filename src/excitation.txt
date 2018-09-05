@@ -1,0 +1,11 @@
+This file documents the excitation struct used in the ANTHEM code.
+Field       Unit   Description
+.amplitude  []     amplitude of the excitation
+.delay      [s]    time delay before excitation signal starts (if .type == 'pulse' or .type == 'exp')
+.freq       [Hz]   frequency of the excitation signal (if .type == 'sine')
+.phi        [deg]  phase shift of excitation signal in degree (if .type == 'sine')
+.signal     []     anonymous function f(t) containing analytical description of excitation signal (if available)
+.tau        [s]    time constant (if .type == 'exp')
+.type       []     shape of the excitation, can be 'pulse','exp','sine' or 'constant'
+.t_rise     [s]    rise time (if .type == 'pulse')
+.t_end      [s]    end time (if .type == 'pulse')

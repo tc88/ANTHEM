@@ -1,0 +1,5 @@
+*.cir
+*.raw
+*.log
+*.csv
+testcaseEMresults*.mat
