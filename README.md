@@ -11,7 +11,7 @@ Technische Universitaet Darmstadt
 This code is based on the following paper:
 T. Casper, D. Duque, S. Schöps, H. De Gersem. Automated Netlist Generation
 for 3D Electrothermal and Electromagnetic Field Problems. Journal of 
-Computational Electronics, submitted.
+Computational Electronics, submitted. arXiv:1809.08588.
 
 license: see LICENSE.md
          the following files are distributed under a different license, being stated directly in the corresponding file:

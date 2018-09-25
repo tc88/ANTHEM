@@ -3,7 +3,7 @@
 %
 % T. Casper, D. Duque, S. Schöps, H. De Gersem. Automated Netlist 
 % Generation for 3D Electrothermal and Electromagnetic Field Problems.
-% Journal of Computational Electronics, submitted.
+% Journal of Computational Electronics, submitted. arXiv:1809.08588.
 %
 % authors:
 % Thorben Casper, David Duque, Victoria Heinz, Abdul Moiz,
