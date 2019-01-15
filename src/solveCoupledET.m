@@ -29,7 +29,7 @@ function [phiSol,Tsol] = solveCoupledET(msh,materials,idx,pots,T,time,wire,verbo
 %   phiSol     electric potential solution (np-by-1)
 %   Tsol       temperature solution (np-by-1)
 %
-% See also computeQJ, runLTspice
+% See also computeQJ, runLTspice, solveCoupledETstatic
 %
 % authors:
 % Thorben Casper, David Duque, Victoria Heinz, Abdul Moiz,

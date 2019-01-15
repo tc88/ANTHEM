@@ -21,9 +21,7 @@ wineEXE = '/usr/bin/wine';                                                 % pat
 LTspiceEXE = '~/.wine/drive_c/Program Files (x86)/LTC/LTspiceIV/scad3.exe';% path to LTspice (may include whitespaces and parantheses)
 
 % if Octave is used, add compatOctave to path for compatibility
-if isOctave
-    addpath('compatOctave');
-end
+if isOctave, addpath('compatOctave'); end
 
 % find LTspice version from LTspice path
 if ~isempty(strfind(LTspiceEXE,'LTspiceIV'))
@@ -36,6 +34,7 @@ end
 
 % run individual test cases
 testcaseET(modelsize,LTspiceEXE,wineEXE,versionLTspice,verbose);
+testcaseConvergence(LTspiceEXE,wineEXE,verbose);                           % only in official journal version
 testcaseChip(LTspiceEXE,wineEXE,versionLTspice,verbose);
 testcaseEM(modelsize,LTspiceEXE,wineEXE,versionLTspice,verbose);
 testcaseABC(modelsize,LTspiceEXE,wineEXE,versionLTspice,verbose);

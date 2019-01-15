@@ -1,4 +1,4 @@
-function testcaseABC(modelsize,LTspiceEXE,wineEXE,versionLTspice,verbose)
+function testcaseABC(modelsize,LTspiceEXE,wineEXE,versionLTspice)
 % TESTCASEABC is a test case that implements absorbing boundary
 % conditions (ABC) in an exemplary setting. A coaxial cable of rectangular
 % cross section is used to simulate wave propagation along the cable from
@@ -47,7 +47,6 @@ for i = 1:length(terminationCell)
     % terminate port 2 of the transmission line with R
     ipe4RatP1 = [[5,7,9,11] [2,3,10,11]+np];
     ipe4RatP2 = ipe4RatP1 + (msh.nz-1)*msh.Mz;
-    ipe4R = union(ipe4RatP1,ipe4RatP2);
     Msigma = nullInv(sparse(ipe4RatP2,ipe4RatP2,8*R*ones(numel(ipe4RatP2),1),3*np,3*np));
 
     % primary edge index at port 2 used for current and voltage measurements
@@ -99,7 +98,7 @@ for i = 1:length(terminationCell)
     timeCir = spiceData.time_vect;
     timeFIT = refineAxis(timeCir,refineFactorTime4Fit);
     ntFIT = length(timeFIT);
-    [espice,idx] = spiceOrderOutput(spiceData);
+    espice = spiceOrderOutput(spiceData);
     V2Cir  = -espice(ipe2measureP2,:);
     VoiCir = -espice(ipe2measure,:);
 

@@ -4,7 +4,7 @@ function extractNetlist4FITET(filename,msh,idx,excitation,materials,tEnd,Tinit)
 % for LTspice syntax.
 %
 % Input:
-%   filename     name of file to save netlist in
+%   filename     name of file to save netlist in (without file extension)
 %   msh          struct as defined by src/msh.txt
 %                required fields: np,Mx,My,Mz,ipnXmin,ipnXmax,ipnYmin,
 %                                 ipnYmax,ipnZmin,ipnZmax,ipeGhost
@@ -14,8 +14,10 @@ function extractNetlist4FITET(filename,msh,idx,excitation,materials,tEnd,Tinit)
 %   excitation   struct as defined by src/excitation.txt
 %                required fields: amplitude,delay,freq,phi,tau,type,t_rise
 %   materials    struct as defined by src/materials.txt
-%                required fields: Msigma,Mlambda,Meps,Mrhoc
-%   tEnd         end time (scalar)
+%                required fields: Msigma,Mlambda
+%                additional required fields for transient analysis: Meps,Mrhoc
+%   tEnd         end time for transient analysis, 0 for DC analysis
+%                (optional, only for transient analysis, default: 0)
 %   Tinit        initial temperature (optional,default: 293)
 %                (scalar or np-by-1)
 %
@@ -30,6 +32,13 @@ function extractNetlist4FITET(filename,msh,idx,excitation,materials,tEnd,Tinit)
 % Technische Universitaet Darmstadt
 
 if nargin < 7, Tinit = 293;     end
+if nargin < 6, tEnd = 0;        end
+
+% input checks
+if tEnd == 0 && ~strcmp(excitation.type,'constant')
+    error('For a DC simulation, only constant excitations are supported.');
+end
+if tEnd == 0, analysis = 'DC'; else, analysis = 'tran'; end
 
 % broadcase Tinit if scalar is given
 if isscalar(Tinit), Tinit = Tinit*ones(msh.np,1); end
@@ -53,9 +62,11 @@ for m = 1:3*msh.np
         GelmString = createResistor(m,i,j,materials,'sigma');
         fprintf(fileID,'%s%d\t%d\t%d\t%s%d%s%d%s%s\n','BGel',m,i,j,'I=(V(',i,')-V(',j,'))*',GelmString);
 
-        % electric capacitor
-        Celm = full(materials.Meps(m,m));
-        fprintf(fileID,'%s%d\t\t%d\t%d\t%d\t%s\n','Cel',m,i,j,Celm,'ic=0');
+        if tEnd ~= 0
+	    % electric capacitor
+	    Celm = full(materials.Meps(m,m));
+	    fprintf(fileID,'%s%d\t\t%d\t%d\t%d\t%s\n','Cel',m,i,j,Celm,'ic=0');
+        end
 
         % linear thermal resistor
         Rthm = full(1/materials.Mlambda(m,m));
@@ -68,9 +79,11 @@ allPots  = '';
 allTemps = '';
 % iterate over points Pi of the grid
 for i=1:msh.np
-    % capacitor for thermal circuit
-    Cthi = full(materials.Mrhoc(i,i));
-    fprintf(fileID,'%s%d%s\t%d%s\t%d\t%d\t%s%d\n','Cth',i,'T',i,'T',0,Cthi,'ic=',Tinit(i));
+    if tEnd ~= 0
+        % capacitor for thermal circuit
+        Cthi = full(materials.Mrhoc(i,i));
+        fprintf(fileID,'%s%d%s\t%d%s\t%d\t%d\t%s%d\n','Cth',i,'T',i,'T',0,Cthi,'ic=',Tinit(i));
+    end
 
     % Joule losses QJ for node i
     QJistring = createQJ4point(i,msh,materials);
@@ -97,11 +110,15 @@ for i=1:msh.np
 end
 
 % time settings
-fprintf(fileID,'%s\t%d\t%s\n','.tran',tEnd,'uic');
+if tEnd == 0
+    fprintf(fileID,'%s\t%s%d\t%d\t%d\t%d\n','.dc','VDirEl',idx.elect.excitation(1),0,excitation.amplitude,excitation.amplitude);
+else
+    fprintf(fileID,'%s\t%d\t%s\n','.tran',tEnd,'uic');
+end
 
 % print potentials and temperatures
-fprintf(fileID,'%s\t%s\t%s\n','.print','tran',allPots );
-fprintf(fileID,'%s\t%s\t%s'  ,'.print','tran',allTemps);
+fprintf(fileID,'%s\t%s\t%s\n','.print',analysis,allPots);
+fprintf(fileID,'%s\t%s\t%s\n','.print',analysis,allTemps);
 
 % disable direct Newton iteration and Gmin stepping for faster init DC solution
 fprintf(fileID,'.option gminsteps 0');

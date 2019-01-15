@@ -29,6 +29,9 @@ if nargin < 4, verbose = [1,0]; end
 if nargin < 3, suffix = ''; end
 if nargin < 2, prefix = ''; end
 
+% input check
+if ~isrow(data.variable_name_list), data.variable_name_list = data.variable_name_list'; end
+
 tstart = tic;
 if verbose(1), fprintf('reordering circuit results to be in accordance with canonical FIT numbering scheme ...\n'); end
 
