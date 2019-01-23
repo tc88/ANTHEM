@@ -191,8 +191,8 @@ function raw_data = LTspice2Matlab( filename, varargin )
     
     
     filename = fliplr(deblank(fliplr(deblank(filename))));   %Remove leading and trailing spaces from filename.
-    if strcmp(LTspiceVersion,'IV'), fid = fopen(filename, 'rb');
-    elseif strcmp(LTspiceVersion,'XVII'), fid = fopen(filename,'rb','n','UTF16LE');
+    if strcmp(LTspiceVersion,'IV'), fid = fopen(filename, 'rb','l');
+    elseif strcmp(LTspiceVersion,'XVII'), fid = fopen(filename,'rb','l');
     end
     if length(fid)==1 && isnumeric(fid) && fid==-1,
         %try to append ".raw" to the file name ...
@@ -216,9 +216,13 @@ function raw_data = LTspice2Matlab( filename, varargin )
             error( sprintf( 'Format error in LTspice file "%s" ... End of file unexpectedly encountered', filename ));
         end
         
-        the_line = char(the_line);
+        the_lineTemp = char(the_line);
+        the_line = the_lineTemp(the_lineTemp~=0); % exclude Null characters resulting from UTF-16LE encoding used by LTspiceXVII
         
-        if length(strfind( the_line, 'Binary:' ))~=0,  file_format = 'binary';  break;  end
+        if length(strfind( the_line, 'Binary:' ))~=0
+            if the_lineTemp(end) == 0, fseek(fid,ftell(fid)+1,'bof'); end % move forward last byte if UTF-16LE encoding is read
+            file_format = 'binary';  break;
+        end
         if length(strfind( the_line, 'Values:' ))~=0,  file_format = 'ascii';   break;  end
         
         if variable_flag==0,  %Non-variable header section
