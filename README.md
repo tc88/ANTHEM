@@ -19,4 +19,5 @@ license: see LICENSE.md
 additionally: If this code is used in any other work, please cite the above paper.
 
 compatibility:
-- functionality has been tested for at least Matlab 2015a and Octave 4.2.0.
+- functionality has been tested for Matlab 2015a and Octave 4.2.0.
+- using Octave 4.4.1, problems with the anonymous function stored in excitation.signal have been reported.
